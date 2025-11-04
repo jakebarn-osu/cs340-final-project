@@ -6,4 +6,111 @@
 
 <h1>Store Inventory Page</h1>
 
+ <table border="1" cellpadding="8" cellspacing="0">
+	<thead>
+		<tr>
+			<th>Equipment ID</th>
+			<th>Equipment Name</th>
+			<th>Store Location</th>
+			<th>Quantity</th>
+			<th colspan="2">Update</th>
+  </tr>
+ </thead>
+  <!-- A query that takes Equipment.id, Equipment.item_name, 
+   Stores.address, quantity-->
+ <tbody>
+
+		 <tr>
+			<td>1</td>
+			<td>Snowboard</td>
+			<td>123 Fake St</td>
+			<td>20</td>
+			<td>
+				<button>Edit Quantity</button>
+			</td>
+			<td>
+				<button>Delete</button>
+			</td>
+		 </tr>
+		<tr>
+			<td>2</td>
+			<td>Skiis</td>
+			<td>689 Bloom Ave</td>
+			<td>5</td>
+			<td>
+				<button>Edit Quantity</button>
+			</td>
+			<td>
+				<button>Delete</button>
+			</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>Backpack</td>
+			<td>67 Cherrywood Ln</td>
+			<td>15</td>
+			<td>
+				<button>Edit Quantity</button>
+			</td>
+			<td>
+				<button>Delete</button>
+			</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>Trekking Poles</td>
+			<td>67 Cherrywood Ln</td>
+			<td>8</td>
+			<td>
+				<button>Edit Quantity</button>
+			</td>
+			<td>
+				<button>Delete</button>
+			</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>Helmet</td>
+			<td>451 Gandy Blvd</td>
+			<td>10</td>
+			<td>
+				<button>Edit Quantity</button>
+			</td>
+			<td>
+				<button>Delete</button>
+			</td>
+		</tr>
+ </tbody>
+</table>
+
+<h3>Add New Item</h3>
+<form method="POST" action="/store-inventory">
+	<label for="store-id">Store Address: </label>
+	<select id="stores">Choose a Store
+		<option>123 Fake St</option>
+		<option>689 Bloom Ave</option>
+		<option>67 Cherrywood Ln</option>
+		<option>451 Gandy Blvd</option>
+	</select>
+
+	<label for="equipment-name">Equipment Name: </label>
+	<input type="text"/>
+
+	<label for="new-quantity">New Quantity:</label>
+	<input type="text"/>
+	<input type="submit"/>
+</form>
+
+<h3>Edit Inventory Quantity</h3>
+<form method="PUT" action="/store-inventory">
+	<label for="store-id">Store Address: </label>
+	<input type="text"/>
+
+	<label for="equipment-name">Equipment Name: </label>
+	<input type="text"/>
+
+	<label for="new-quantity">New Quantity:</label>
+	<input type="text"/>
+	<input type="submit"/>
+</form>
 {% endblock %}
