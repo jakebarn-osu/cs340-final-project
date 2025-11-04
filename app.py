@@ -1,7 +1,19 @@
-from flask import Flask, render_template, render_template_string
+from typing import List
+from flask import Flask, render_template, redirect
 from flask import request
 
 app = Flask(__name__)
+
+_customers = [
+   { "first-name": "jake", "last-name": "barnett", "phone-number": "206-123-4567", "address": "123 Fake St"},
+   { "first-name": "eric", "last-name": "mitchell", "phone-number": "206-987-6543", "address": "456 Front St"},
+]
+
+def get_customer_from_db() -> List[dict[str, str]]:
+   return _customers
+
+def save_customer_to_db(new_customer: dict[str, str]) -> None:
+   _customers.append(new_customer)
 
 # Routes
 @app.route("/", methods=["GET"])
@@ -18,7 +30,25 @@ def store_inventory():
 
 @app.route("/customers", methods=["GET", "POST"])
 def customers():
-   return render_template("/customers.html")
+   if request.method == "POST":
+      print(request.form)
+      first_name = request.form.get("first-name") or ""
+      last_name = request.form.get("last-name") or ""
+      phone = request.form.get("phone-number") or ""
+      address = request.form.get("address") or ""
+
+      save_customer_to_db({
+         "first-name": first_name,
+         "last-name": last_name,
+         "phone-number": phone,
+         "address": address,
+      })
+
+      # redirect clears POST data and reloads table
+      return redirect("/customers")
+   
+   customers_list = get_customer_from_db()
+   return render_template("/customers.html", customers=customers_list)
 
 @app.route("/equipment", methods=["GET", "POST"])
 def equipment():
