@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}GearUp Rentals{% endblock %}</title>
+</head>
+
+<body>
+    <header>
+        <h1>GearUp Rentals</h1>
+        <hr />
+    </header>
+
+    <nav>
+        <div>
+            <a href="./stores">Stores</a>
+            <a href="./store-inventory">Store Inventory</a>
+            <a href="./customers">Customers</a>
+            <a href="./equipment">Equipment</a>
+            <a href="./reservations">Reservations</a>
+            <a href="./categories">Categories</a>
+        </div>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <hr />
+        <p>©2025 CS340 Team 61. Eric Mitchell and Jake Barnet</p>
+    </footer>
+</body>
+
+</html>

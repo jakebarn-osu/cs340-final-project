@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Customers Page{% endblock %}
+
+{% block content %}
+
+<h1>Customers Page</h1>
+
+
+{% if customers %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer["first-name"] }}</td>
+            <td>{{ customer["last-name"] }}</td>
+            <td>{{ customer["phone-number"] }}</td>
+            <td>{{ customer["address"] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p><em>No customers found.</em></p>
+{% endif %}
+
+<h3>Add New Customer</h3>
+<form method="POST" action="/customers">
+    <label for="first-name">First Name:</label><br />
+    <input type="text" id="first-name" name="first-name" required /><br /><br />
+
+    <label for="last-name">Last Name:</label><br />
+    <input type="text" id="last-name" name="last-name" required /><br /><br />
+
+    <label for="phone-number">Phone Number:</label><br />
+    <input type="tel" id="phone-number" name="phone-number" /><br /><br />
+
+    <label for="address">Address:</label><br />
+    <textarea id="address" name="address" rows="3"></textarea><br /><br />
+
+    <input type="submit" value="Add Customer" />
+</form>
+
+{% endblock %}
