@@ -24,7 +24,7 @@ def home():
 def stores():
    return render_template("/stores.html")
 
-@app.route("/store-inventory", methods=["GET", "POST"])
+@app.route("/store-inventory", methods=["GET", "POST", "PUT", "DELETE"])
 def store_inventory():
    return render_template("/store-inventory.html")
 
