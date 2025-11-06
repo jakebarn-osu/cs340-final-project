@@ -52,7 +52,17 @@ def customers():
 
 @app.route("/equipment", methods=["GET", "POST"])
 def equipment():
-   return render_template("/equipment.html")
+   equipment = [
+      {"id": 1, "item_name": "snowboard", "category": "Skiing" },
+      {"id": 1, "item_name": "skiis",     "category": "Skiing" },
+      {"id": 1, "item_name": "backpack",  "category": "Hiking" },
+      {"id": 1, "item_name": "trekking",  "category": "Hiking" },
+      {"id": 1, "item_name": "helmet",    "category": "Cycling" },
+      {"id": 1, "item_name": "ski_poles", "category": "Skiings" },
+      {"id": 1, "item_name": "goggles",   "category": "Skiings" },
+      {"id": 1, "item_name": "bicycle",   "category": "Cycling" },
+   ]
+   return render_template("/equipment.html", equipment=equipment)
 
 @app.route("/reservations", methods=["GET", "POST"])
 def reservations():
