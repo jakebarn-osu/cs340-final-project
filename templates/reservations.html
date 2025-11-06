@@ -5,5 +5,112 @@
 {% block content %}
 
 <h1>Reservations Page</h1>
+{% if reservations %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <td>Reservation Id</td>
+            <td>Customer Id</td>
+            <td>Customer First Name</td>
+            <td>Customer Last Name</td>
+            <td>Equipment Id</td>
+            <td>Equipment Name</td>
+            <td>Start Date</td>
+            <td>End Date</td>
+            <td>Actual Start Date</td>
+            <td>Actual End Date</td>
+            <td>Edit</td>
+            <td>Delete</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reservation in reservations %}
+        <tr>
+
+            <td>{{ reservation["reservation_id"]}}</td>
+            <td>{{ reservation["customer_id"]}}</td>
+            <td>{{ reservation["customer_first_name"]}}</td>
+            <td>{{ reservation["customer_last_name"]}}</td>
+            <td>{{ reservation["equipment_id"]}}</td>
+            <td>{{ reservation["equipment_name"]}}</td>
+            <td>{{ reservation["start_date"]}}</td>
+            <td>{{ reservation["end_date"]}}</td>
+            <td>{{ reservation["actual_start_date"]}}</td>
+            <td>{{ reservation["actual_end_date"]}}</td>
+            <td>
+                <button>Edit</button>
+            </td>
+            <td>
+                <button>Delete</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p><em>No reservations found.</em></p>
+{% endif %}
+<h3>Add New Reservation</h3>
+<form method="POST" action="/customers">
+
+    <label for="customer_id">Customer:</label>
+    <select id="customer_id" name="customer_id">
+        <option value="1">Jake Barnett (1)</option>
+        <option value="2">Eric Mitchell (2)</option>
+    </select>
+
+
+
+    <label for="equipment_id">Item:</label>
+    <select id="equipment_id" name="equipment_id">
+        <option value="1">Snowboard</option>
+        <option value="2">Skis</option>
+    </select>
+
+
+    <label for="start_date">Start Date:</label>
+    <input type="text" id="start_date" name="start_date" required />
+
+    <label for="end_date">End Date:</label>
+    <input type="text" id="end_date" name="end_date" required />
+
+    <input type="submit" value="Add Reservation" />
+</form>
+
+<h3>Edit Existing Reservation</h3>
+<form method="POST" action="/customers">
+    <label for="customer_id">Customer:</label>
+    <select id="customer_id" name="customer_id">
+        <option value="1">Jake Barnett (1)</option>
+        <option value="2">Eric Mitchell (2)</option>
+    </select>
+
+    <label for="customer_id">Customer:</label>
+    <select id="customer_id" name="customer_id">
+        <option value="1">Jake Barnett (1)</option>
+        <option value="2">Eric Mitchell (2)</option>
+    </select>
+
+    <label for="equipment_id">Item:</label>
+    <select id="equipment_id" name="equipment_id">
+        <option value="1">Snowboard</option>
+        <option value="2">Skis</option>
+    </select>
+
+
+    <label for="start_date">Start Date:</label>
+    <input type="text" id="start_date" name="start_date" required />
+
+    <label for="end_date">End Date:</label>
+    <input type="text" id="end_date" name="end_date" required />
+
+    <label for="actual_start_date">Actual Start Date:</label>
+    <input type="text" id="actual_start_date" name="actual_start_date" required />
+
+    <label for="actual_end_date">Actual End Date:</label>
+    <input type="text" id="actual_end_date" name="actual_end_date" required />
+
+    <input type="submit" value="Edit Reservation" />
+</form>
 
 {% endblock %}

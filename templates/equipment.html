@@ -6,4 +6,27 @@
 
 <h1>Equipment Page</h1>
 
+{% if equipment %}
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Item Name</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in equipment %}
+        <tr>
+            <td>{{ item["id"] }}</td>
+            <td>{{ item["item_name"] }}</td>
+            <td>{{ item["category"] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p><em>No equipment found.</em></p>
+{% endif %}
+
 {% endblock %}
