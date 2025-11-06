@@ -32,21 +32,4 @@
 <p><em>No customers found.</em></p>
 {% endif %}
 
-<h3>Add New Customer</h3>
-<form method="POST" action="/customers">
-    <label for="first-name">First Name:</label><br />
-    <input type="text" id="first-name" name="first-name" required /><br /><br />
-
-    <label for="last-name">Last Name:</label><br />
-    <input type="text" id="last-name" name="last-name" required /><br /><br />
-
-    <label for="phone-number">Phone Number:</label><br />
-    <input type="tel" id="phone-number" name="phone-number" /><br /><br />
-
-    <label for="address">Address:</label><br />
-    <textarea id="address" name="address" rows="3"></textarea><br /><br />
-
-    <input type="submit" value="Add Customer" />
-</form>
-
 {% endblock %}

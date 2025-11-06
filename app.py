@@ -54,19 +54,67 @@ def customers():
 def equipment():
    equipment = [
       {"id": 1, "item_name": "snowboard", "category": "Skiing" },
-      {"id": 1, "item_name": "skiis",     "category": "Skiing" },
-      {"id": 1, "item_name": "backpack",  "category": "Hiking" },
-      {"id": 1, "item_name": "trekking",  "category": "Hiking" },
-      {"id": 1, "item_name": "helmet",    "category": "Cycling" },
-      {"id": 1, "item_name": "ski_poles", "category": "Skiings" },
-      {"id": 1, "item_name": "goggles",   "category": "Skiings" },
-      {"id": 1, "item_name": "bicycle",   "category": "Cycling" },
+      {"id": 2, "item_name": "skiis",     "category": "Skiing" },
+      {"id": 3, "item_name": "backpack",  "category": "Hiking" },
+      {"id": 4, "item_name": "trekking",  "category": "Hiking" },
+      {"id": 5, "item_name": "helmet",    "category": "Cycling" },
+      {"id": 6, "item_name": "ski_poles", "category": "Skiings" },
+      {"id": 7, "item_name": "goggles",   "category": "Skiings" },
+      {"id": 8, "item_name": "bicycle",   "category": "Cycling" },
    ]
    return render_template("/equipment.html", equipment=equipment)
 
+
+# id int AUTO_INCREMENT NOT NULL,
+	# customer_id int,
+	# equipment_id int,
+	# start_date datetime NOT NULL,
+	# end_date datetime NOT NULL,
+	# actual_start_date datetime NOT NULL,
+	# actual_end_date datetime NOT NULL,
+	# FOREIGN KEY (customer_id) REFERENCES Customers(id) ON DELETE CASCADE,
+	# FOREIGN KEY (equipment_id) REFERENCES Equipment(id) ON DELETE CASCADE,
 @app.route("/reservations", methods=["GET", "POST"])
 def reservations():
-   return render_template("/reservations.html")
+   reservations = [
+      {
+         "reservation_id": "1",
+         "customer_id": "1",
+         "customer_first_name": "jake",
+         "customer_last_name": "barnett",
+         "equipment_id": "1",
+         "equipment_name": "snowboard",
+         "start_date": "1/1/2025",
+         "end_date": "1/10/2025",
+         "actual_start_date": "1/1/2025",
+         "actual_end_date": "1/9/2025"
+       },
+       {
+         "reservation_id": "2",
+         "customer_id": "1",
+         "customer_first_name": "jake",
+         "customer_last_name": "barnett",
+         "equipment_id": "2",
+         "equipment_name": "skiis",
+         "start_date": "2/1/2025",
+         "end_date": "2/20/2025",
+         "actual_start_date": "1/1/2025",
+         "actual_end_date": ""
+       },
+       {
+         "reservation_id": "3",
+         "customer_id": "2",
+         "customer_first_name": "eric",
+         "customer_last_name": "mitchell",
+         "equipment_id": "8",
+         "equipment_name": "bicycle",
+         "start_date": "3/1/2025",
+         "end_date": "3/15/2025",
+         "actual_start_date": "",
+         "actual_end_date": ""
+       },
+   ]
+   return render_template("/reservations.html", reservations=reservations)
 
 @app.route("/categories", methods=["GET", "POST"])
 def categories():
