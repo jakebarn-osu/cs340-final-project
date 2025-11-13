@@ -15,6 +15,7 @@
             <th>Last Name</th>
             <th>Phone</th>
             <th>Address</th>
+            <td>Delete</td>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +25,9 @@
             <td>{{ customer["last-name"] }}</td>
             <td>{{ customer["phone-number"] }}</td>
             <td>{{ customer["address"] }}</td>
+            <td>
+                <button>Delete</button>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
