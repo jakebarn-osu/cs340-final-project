@@ -36,7 +36,20 @@ def stores():
    
 @app.route("/store-inventory", methods=["GET", "POST", "PUT", "DELETE"])
 def store_inventory():
-   return render_template("/store-inventory.html")
+   try:
+      if request.method == "GET":
+         dbConnection = db.connectDB()
+         query1 = "SELECT InventoryItems.equipment_id, InventoryItems.store_id, Equipment.item_name, \
+                  Stores.address, InventoryItems.quantity FROM InventoryItems \
+                  JOIN Equipment ON InventoryItems.equipment_id = Equipment.id \
+                  JOIN Stores ON InventoryItems.store_id = Stores.id \
+                  ORDER BY Stores.address, Equipment.item_name;"
+         inventory_items = db.query(dbConnection, query1).fetchall()
+
+   except Exception as e:
+      print(f"Error executing query: {e}")
+      return "An error has occured while exceuting DB query", 500
+   return render_template("/store-inventory.html", inventory_items=inventory_items, stores=stores)
 
 @app.route("/customers", methods=["GET", "POST"])
 def customers():
