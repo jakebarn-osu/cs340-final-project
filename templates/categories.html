@@ -9,32 +9,19 @@
  <table border="1" cellpadding="8" cellspacing="0">
 	<thead>
 		<tr>
-			<th>Category ID</th>
-			<th>Activity Type</th>
-			<th>Description</th>
+			{% for key in categories[0].keys() %}
+			<th>{{ key }}</th>
+			{% endfor %}
 		</tr>
 	</thead>
 	<tbody>
+		{% for category in categories %}
 		<tr>
-			<td>1</td>
-			<td>Hiking</td>
-			<td>Hiking Equipment</td>
+			<td>{{ category.id }}</td>
+			<td>{{ category.activity_type }}</td>
+			<td>{{ category.description }}</td>
 		</tr>
-		<tr>
-			<td>2</td>
-			<td>Skiing</td>
-			<td>Skiing equipment</td>
-		</tr>
-		<tr>
-			<td>3</td>
-			<td>Protective</td>
-			<td>Personal protective equipment</td>
-		</tr>
-		<tr>
-			<td>4</td>
-			<td>Cycling</td>
-			<td>Bicycle equipment</td>
-		</tr>
+		{% endfor %}
 	</tbody>
 </table>
 {% endblock %}

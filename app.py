@@ -33,6 +33,7 @@ def stores():
    except Exception as e:
       print(f"Error executing queries: {e}")
       return "An error has occured while exceuting DB query", 500
+   
 @app.route("/store-inventory", methods=["GET", "POST", "PUT", "DELETE"])
 def store_inventory():
    return render_template("/store-inventory.html")
@@ -127,7 +128,15 @@ def reservations():
 
 @app.route("/categories", methods=["GET", "POST"])
 def categories():
-   return render_template("/categories.html")
+   try:
+      dbConnection = db.connectDB()
+      query1 = "SELECT * FROM Categories;"
+      categories = db.query(dbConnection, query1).fetchall()
+      return render_template("/categories.html", categories=categories)
+   except Exception as e:
+      print(f"Error executing queries: {e}")
+      return "An error occured while executing the database queries", 500
+
 
 # Listener
 if __name__ == "__main__":
