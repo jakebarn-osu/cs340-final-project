@@ -1,6 +1,9 @@
 from typing import List
 from flask import Flask, render_template, redirect
 from flask import request
+import db_connector as db 
+
+port = 8000
 
 app = Flask(__name__)
 
@@ -22,8 +25,14 @@ def home():
 
 @app.route("/stores", methods=["GET", "POST"])
 def stores():
-   return render_template("/stores.html")
-
+   try:
+      dbConnection = db.connectDB()
+      query1 = "SELECT Stores.id, Stores.address, Stores.city, Stores.zip_code FROM Stores;"
+      stores = db.query(dbConnection, query1).fetchall()
+      return render_template("/stores.html", stores=stores)
+   except Exception as e:
+      print(f"Error executing queries: {e}")
+      return "An error has occured while exceuting DB query", 500
 @app.route("/store-inventory", methods=["GET", "POST", "PUT", "DELETE"])
 def store_inventory():
    return render_template("/store-inventory.html")
