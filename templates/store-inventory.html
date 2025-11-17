@@ -9,142 +9,106 @@
  <table border="1" cellpadding="8" cellspacing="0">
 	<thead>
 		<tr>
-			<th>Equipment ID</th>
-			<th>Equipment Name</th>
-			<th>Store Location</th>
-			<th>Quantity</th>
+			{% for key in inventory_items[0].keys() %}
+			<th>{{ key }}</th>
+			{% endfor %}
 			<th colspan="2">Update</th>
   </tr>
  </thead>
   <!-- A query that takes Equipment.id, Equipment.item_name, 
    Stores.address, quantity-->
  <tbody>
-
-		 <tr>
-			<td>1</td>
-			<td>Snowboard</td>
-			<td>123 Fake St</td>
-			<td>20</td>
-			<td>
-				<button>Delete</button>
-			</td>
-		 </tr>
+		{% for item in inventory_items %}
 		<tr>
-			<td>2</td>
-			<td>Skiis</td>
-			<td>689 Bloom Ave</td>
-			<td>5</td>
-			<td>
-				<button>Delete</button>
-			</td>
+			<td>{{ item.equipment_id }}</td>
+			<td> {{ item.store_id }}</td>
+			<td>{{ item.item_name }}</td>
+			<td>{{ item.address }}</td>
+			<td>{{ item.quantity }}</td>
+			<form id="delete_inventory_item_form">
+				<input type="hidden" name="delete_equipment_item_id" value="{{ item.equipment_id }}">
+				<input type="hidden" name="delete_from_store_id" value="{{ item.store_id }}">
+				<td>
+					<button type="submit">Delete</button>
+				</td>
+			</form>
 		</tr>
-		<tr>
-			<td>3</td>
-			<td>Backpack</td>
-			<td>67 Cherrywood Ln</td>
-			<td>15</td>
-			<td>
-				<button>Delete</button>
-			</td>
-		</tr>
-		<tr>
-			<td>4</td>
-			<td>Trekking Poles</td>
-			<td>67 Cherrywood Ln</td>
-			<td>8</td>
-			<td>
-				<button>Delete</button>
-			</td>
-		</tr>
-		<tr>
-			<td>5</td>
-			<td>Helmet</td>
-			<td>451 Gandy Blvd</td>
-			<td>10</td>
-			<td>
-				<button>Delete</button>
-			</td>
-		</tr>
+		{% endfor %}
  </tbody>
 </table>
 
 <h3>Add New Item</h3>
-<form method="POST" action="/store-inventory">
-	<label for="store-id">Store Address: </label>
-	<select id="stores">Choose a Store
-		<option>123 Fake St</option>
-		<option>689 Bloom Ave</option>
-		<option>67 Cherrywood Ln</option>
-		<option>451 Gandy Blvd</option>
+<form method="POST" id="add_item_to_store_form">
+	<label for="add_item_to_store">Store Address: </label>
+	<select id="stores">
+    <option value="" disabled selected>Choose a Store</option>
+    {% set seen_stores = [] %}
+    {% for store in inventory_items %}
+        {% if store.store_id not in seen_stores %}
+					<option value="{{ store.store_id }}">{{ store.address }}</option>
+					{% set _ = seen_stores.append(store.store_id) %}
+        {% endif %}
+    {% endfor %}
 	</select>
+		
 
-	<label for="equipment-name">Equipment Name: </label>
-	<select id="equipment">Choose equipment
-		<option>Snowboard</option>
-		<option>Skiis</option>
-		<option>Backpack</option>
-		<option>Trekking Poles</option>
-		<option>Helmet</option>
+	<label for="add_item_to_store">Equipment Name: </label>
+	<select id="equipment">Choose equipment>
+		{% set seen_equipment = [] %}
+		{% for equipment in inventory_items %}
+			{% if equipment.equipment_id not in seen_equipment %}
+					<option value="{{ equipment.equipment_id }}"> {{ equipment.item_name }}</option>
+				{% set _ = seen_equipment.append(equipment.equipment_id) %}
+			{% endif %}
+		{% endfor %}			
 	</select>
 
 	<label for="new-quantity">Quantity:</label>
-	<input type="text"/>
+	<input type="number" name="add_item_quantity_to_store" id="add_item_quantity_to_store" min="1"/>
 	<input type="submit"/>
 </form>
 
 <h3>Update Store Equipment Inventory</h3>
-<form method="PUT" action="/store-inventory">
-	<label for="store-id">Store Address: </label>
-	<select id="stores">Choose a Store
-		<option>123 Fake St</option>
-		<option>689 Bloom Ave</option>
-		<option>67 Cherrywood Ln</option>
-		<option>451 Gandy Blvd</option>
+<form method="PUT" class="cuForm" id="update_store_equipment_form">
+	<label for="update_store_id">Store Address: </label>
+	<select nmae="update_store_id" id="update_store_id" required>Choose a Store
+    <option value="" disabled selected>Choose a Store</option>
+    {% set seen_stores = [] %}
+    {% for store in inventory_items %}
+        {% if store.store_id not in seen_stores %}
+					<option value="{{ store.store_id }}">{{ store.address }}</option>
+					{% set _ = seen_stores.append(store.store_id) %}
+        {% endif %}
+    {% endfor %}
 	</select>
 
-	<label for="equipment-name">Current Equipment Item: </label>
-	<select id="equipment">Choose equipment
-		<option>Snowboard</option>
-		<option>Skiis</option>
-		<option>Backpack</option>
-		<option>Trekking Poles</option>
-		<option>Helmet</option>
+	<label for="update_equipment_id">Current Equipment Item: </label>
+	<select name="update_equipment_id" required>Choose equipment
+		{% set seen_equipment = [] %}
+		{% for equipment in inventory_items %}
+			{% if equipment.equipment_id not in seen_equipment %}
+					<option value="{{ equipment.equipment_id }}"> {{ equipment.item_name }}</option>
+				{% set _ = seen_equipment.append(equipment.equipment_id) %}
+			{% endif %}
+		{% endfor %}	
 	</select>
 
-		<label for="equipment-name">Updated Equipment Item: </label>
-	<select id="updated-equipment">Choose equipment
-		<option>Snowboard</option>
-		<option>Skiis</option>
-		<option>Backpack</option>
-		<option>Trekking Poles</option>
-		<option>Helmet</option>
-	</select>
-	<input type="submit"/>
-</form>
-
-<h3>Update Item Quantity</h3>
-<form method="PUT" action="/store-inventory">
-	<label for="store-id">Store Address: </label>
-	<select id="stores">Choose a Store
-		<option>123 Fake St</option>
-		<option>689 Bloom Ave</option>
-		<option>67 Cherrywood Ln</option>
-		<option>451 Gandy Blvd</option>
-	</select>
-
-	<label for="equipment-name">Equipment Item: </label>
-	<select id="equipment">Choose equipment
-		<option>Snowboard</option>
-		<option>Skiis</option>
-		<option>Backpack</option>
-		<option>Trekking Poles</option>
-		<option>Helmet</option>
+	<label for="update_new_equipment_id">Updated Equipment Item: (Optional)</label>
+	<select name="update_new_equipment_id">Choose equipment
+		<option value="" disabled selected>New Equipment Item</option>
+		{% set seen_equipment = [] %}
+		{% for equipment in inventory_items %}
+			{% if equipment.equipment_id not in seen_equipment %}
+					<option value="{{ equipment.equipment_id }}"> {{ equipment.item_name }}</option>
+				{% set _ = seen_equipment.append(equipment.equipment_id) %}
+			{% endif %}
+		{% endfor %}	
 	</select>
 
 	<label for="new-quantity">Quantity:</label>
-	<input type="number" name="quantity" min="1" required>
+	<input type="number" name="update_item_quantity" id="update_item_quantity" min="1"/>
 
-	</select>
 	<input type="submit"/>
 </form>
+
 {% endblock %}
