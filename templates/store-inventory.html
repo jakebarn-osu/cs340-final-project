@@ -25,13 +25,13 @@
 			<td>{{ item.item_name }}</td>
 			<td>{{ item.address }}</td>
 			<td>{{ item.quantity }}</td>
-			<form id="delete_inventory_item_form">
-				<input type="hidden" name="delete_equipment_item_id" value="{{ item.equipment_id }}">
-				<input type="hidden" name="delete_from_store_id" value="{{ item.store_id }}">
-				<td>
+			<td>
+				<form id="delete_inventory_item_form" method="POST" action="/store-inventory-delete">
+					<input type="hidden" name="delete_equipment_item_id" value="{{ item.equipment_id }}">
+					<input type="hidden" name="delete_from_store_id" value="{{ item.store_id }}">
 					<button type="submit">Delete</button>
-				</td>
-			</form>
+				</form>
+			</td>
 		</tr>
 		{% endfor %}
  </tbody>

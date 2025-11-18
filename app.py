@@ -34,22 +34,47 @@ def stores():
       print(f"Error executing queries: {e}")
       return "An error has occured while exceuting DB query", 500
    
-@app.route("/store-inventory", methods=["GET", "POST", "PUT", "DELETE"])
+@app.route("/store-inventory", methods=["GET"])
 def store_inventory():
    try:
-      if request.method == "GET":
-         dbConnection = db.connectDB()
-         query1 = "SELECT InventoryItems.equipment_id, InventoryItems.store_id, Equipment.item_name, \
-                  Stores.address, InventoryItems.quantity FROM InventoryItems \
-                  JOIN Equipment ON InventoryItems.equipment_id = Equipment.id \
-                  JOIN Stores ON InventoryItems.store_id = Stores.id \
-                  ORDER BY Stores.address, Equipment.item_name;"
-         inventory_items = db.query(dbConnection, query1).fetchall()
+      dbConnection = db.connectDB()
+      query1 = "SELECT InventoryItems.equipment_id, InventoryItems.store_id, Equipment.item_name, \
+               Stores.address, InventoryItems.quantity FROM InventoryItems \
+               JOIN Equipment ON InventoryItems.equipment_id = Equipment.id \
+               JOIN Stores ON InventoryItems.store_id = Stores.id \
+               ORDER BY Stores.address, Equipment.item_name;"
+      inventory_items = db.query(dbConnection, query1).fetchall()
 
    except Exception as e:
       print(f"Error executing query: {e}")
       return "An error has occured while exceuting DB query", 500
    return render_template("/store-inventory.html", inventory_items=inventory_items, stores=stores)
+
+@app.route("/store-inventory-delete", methods=["POST"])
+def delete_store_inventory():
+   try:
+      dbConnection = db.connectDB()
+      cursor = dbConnection.cursor()
+      equipment_id = request.form["delete_equipment_item_id"]
+      store_id = request.form["delete_from_store_id"]
+
+      query1 = "CALL sp_delete_inventory_item(%s, %s);"
+      cursor.execute(query1, (equipment_id, store_id))
+
+      while cursor.nextset():
+         pass
+
+      dbConnection.commit()
+      print(f"DELETE EQUIPMENT_ID: {equipment_id} | STORE_ID: {store_id}")
+      return redirect("/store-inventory")
+   except Exception as e:
+      print(f"Error executing queries: {e}")
+      return ("An error occured deleting from InventoryItems", 500)
+   
+   finally:
+      if "dbConnection" in locals() and dbConnection:
+         dbConnection.close()
+
 
 @app.route("/customers", methods=["GET", "POST"])
 def customers():
