@@ -21,6 +21,9 @@
             <a href="./categories">Categories</a>
         </div>
     </nav>
+<form id="reset-form" method="GET" action="/reset-db">
+    <button type="submit" id="reset-button">Reset DB</button>
+</form>
     <main>
         {% block content %}{% endblock %}
     </main>
@@ -30,5 +33,4 @@
         <p>©2025 CS340 Team 61. Eric Mitchell and Jake Barnet</p>
     </footer>
 </body>
-
 </html>

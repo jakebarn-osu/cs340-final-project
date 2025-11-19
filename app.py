@@ -174,8 +174,24 @@ def categories():
    except Exception as e:
       print(f"Error executing queries: {e}")
       return "An error occured while executing the database queries", 500
+      
+@app.route("/reset-db", methods=["GET"])
+def reset_db():
+   try:
+      dbConnection = db.connectDB()
+      cursor = dbConnection.cursor()
 
+      cursor.execute("CALL sp_reset_db();")
+      dbConnection.commit()
 
+      print("DB was successfully reset")
+      return redirect("/")
+   except Exception as e:
+      print(f"Error executing reset DB query error: {e}")
+   finally:
+      cursor.close()
+      dbConnection.close()
+      
 # Listener
 if __name__ == "__main__":
 
