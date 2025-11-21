@@ -7,16 +7,57 @@ port = 8000
 
 app = Flask(__name__)
 
-_customers = [
-   { "first-name": "jake", "last-name": "barnett", "phone-number": "206-123-4567", "address": "123 Fake St"},
-   { "first-name": "eric", "last-name": "mitchell", "phone-number": "206-987-6543", "address": "456 Front St"},
-]
+customers_query = """
+SELECT
+   *
+FROM
+   Customers;
+"""
 
-def get_customer_from_db() -> List[dict[str, str]]:
-   return _customers
+equipment_query = """
+SELECT
+   eq.id,
+   eq.item_name,
+   ca.activity_type as category
+FROM
+   Equipment eq
+   JOIN Categories ca ON eq.category_id = ca.id;
+"""
 
-def save_customer_to_db(new_customer: dict[str, str]) -> None:
-   _customers.append(new_customer)
+reservations_query = """
+SELECT
+   cu.id as customer_id,
+   cu.first_name as customer_first_name,
+   cu.last_name as customer_last_name,
+   eq.id as equipment_id,
+   eq.item_name as equipment_name,
+   res.id as reservation_id,
+   res.start_date as start_date,
+   res.end_date as end_date,
+   res.actual_start_date as actual_start_date,
+   res.actual_end_date as actual_end_date
+FROM
+   Reservations res
+   JOIN Customers cu ON res.customer_id = cu.id
+   JOIN Equipment eq ON res.equipment_id = eq.id;
+"""
+
+def fetchAll(query: str) -> List[dict[str, str]]:
+   dbConnection = db.connectDB()
+   rows = db.query(dbConnection, query).fetchall()
+   return rows
+
+def delete_reservation_by_id(reservation_id: str):
+      dbConnection = db.connectDB()
+      cursor = dbConnection.cursor()
+      delete_query = "CALL sp_delete_reservation(%s);"
+      
+      cursor.execute(delete_query, (reservation_id))
+
+      # while cursor.nextset():
+      #    pass
+
+      dbConnection.commit()
 
 # Routes
 @app.route("/", methods=["GET"])
@@ -78,90 +119,43 @@ def delete_store_inventory():
 @app.route("/customers", methods=["GET", "POST"])
 def customers():
    if request.method == "POST":
-      print(request.form)
-      first_name = request.form.get("first-name") or ""
-      last_name = request.form.get("last-name") or ""
-      phone = request.form.get("phone-number") or ""
+      # TODO:
+      # Sanitize Input
+      first_name = request.form.get("first_name") or ""
+      last_name = request.form.get("last_name") or ""
+      phone = request.form.get("phone_number") or ""
       address = request.form.get("address") or ""
 
-      save_customer_to_db({
-         "first-name": first_name,
-         "last-name": last_name,
-         "phone-number": phone,
-         "address": address,
-      })
+      # TODO:
+      # Save Customer To DB
 
       # redirect clears POST data and reloads table
       return redirect("/customers")
    
-   customers_list = get_customer_from_db()
-   return render_template("/customers.html", customers=customers_list)
+   customers = fetchAll(customers_query)
+   return render_template("/customers.html", customers=customers)
 
 @app.route("/equipment", methods=["GET", "POST"])
 def equipment():
-   equipment = [
-      {"id": 1, "item_name": "snowboard", "category": "Skiing" },
-      {"id": 2, "item_name": "skiis",     "category": "Skiing" },
-      {"id": 3, "item_name": "backpack",  "category": "Hiking" },
-      {"id": 4, "item_name": "trekking",  "category": "Hiking" },
-      {"id": 5, "item_name": "helmet",    "category": "Cycling" },
-      {"id": 6, "item_name": "ski_poles", "category": "Skiings" },
-      {"id": 7, "item_name": "goggles",   "category": "Skiings" },
-      {"id": 8, "item_name": "bicycle",   "category": "Cycling" },
-   ]
+   equipment = fetchAll(equipment_query)
    return render_template("/equipment.html", equipment=equipment)
 
-
-# id int AUTO_INCREMENT NOT NULL,
-	# customer_id int,
-	# equipment_id int,
-	# start_date datetime NOT NULL,
-	# end_date datetime NOT NULL,
-	# actual_start_date datetime NOT NULL,
-	# actual_end_date datetime NOT NULL,
-	# FOREIGN KEY (customer_id) REFERENCES Customers(id) ON DELETE CASCADE,
-	# FOREIGN KEY (equipment_id) REFERENCES Equipment(id) ON DELETE CASCADE,
 @app.route("/reservations", methods=["GET", "POST"])
 def reservations():
-   reservations = [
-      {
-         "reservation_id": "1",
-         "customer_id": "1",
-         "customer_first_name": "jake",
-         "customer_last_name": "barnett",
-         "equipment_id": "1",
-         "equipment_name": "snowboard",
-         "start_date": "1/1/2025",
-         "end_date": "1/10/2025",
-         "actual_start_date": "1/1/2025",
-         "actual_end_date": "1/9/2025"
-       },
-       {
-         "reservation_id": "2",
-         "customer_id": "1",
-         "customer_first_name": "jake",
-         "customer_last_name": "barnett",
-         "equipment_id": "2",
-         "equipment_name": "skiis",
-         "start_date": "2/1/2025",
-         "end_date": "2/20/2025",
-         "actual_start_date": "1/1/2025",
-         "actual_end_date": ""
-       },
-       {
-         "reservation_id": "3",
-         "customer_id": "2",
-         "customer_first_name": "eric",
-         "customer_last_name": "mitchell",
-         "equipment_id": "8",
-         "equipment_name": "bicycle",
-         "start_date": "3/1/2025",
-         "end_date": "3/15/2025",
-         "actual_start_date": "",
-         "actual_end_date": ""
-       },
-   ]
-   return render_template("/reservations.html", reservations=reservations)
+   if request.method == "POST":
+      #TODO: Handle create reservation
+      return redirect("/reservations")
+   
+   reservations = fetchAll(reservations_query)
+   customers = fetchAll(customers_query)
+   equipment = fetchAll(equipment_query)
+   return render_template("/reservations.html", reservations=reservations, customers=customers, equipment=equipment)
+
+@app.route("/reservations-delete", methods=["POST"])
+def reservations_delete():
+   reservation_id = request.form.get("delete_reservation_id") or ""
+   delete_reservation_by_id(reservation_id)
+   return redirect("/reservations")
 
 @app.route("/categories", methods=["GET", "POST"])
 def categories():
@@ -184,12 +178,12 @@ def reset_db():
       dbConnection.commit()
 
       print("DB was successfully reset")
-      return redirect("/")
    except Exception as e:
       print(f"Error executing reset DB query error: {e}")
    finally:
       cursor.close()
       dbConnection.close()
+      return redirect("/")
       
 # Listener
 if __name__ == "__main__":
