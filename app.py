@@ -1,7 +1,7 @@
 from typing import List
 from flask import Flask, render_template, redirect
 from flask import request
-import db_connector as db 
+import db.db_connector as db 
 
 port = 8000
 
@@ -44,11 +44,10 @@ def store_inventory():
                JOIN Stores ON InventoryItems.store_id = Stores.id \
                ORDER BY Stores.address, Equipment.item_name;"
       inventory_items = db.query(dbConnection, query1).fetchall()
-
+      return render_template("/store-inventory.html", inventory_items=inventory_items, stores=stores)
    except Exception as e:
       print(f"Error executing query: {e}")
       return "An error has occured while exceuting DB query", 500
-   return render_template("/store-inventory.html", inventory_items=inventory_items, stores=stores)
 
 @app.route("/store-inventory-delete", methods=["POST"])
 def delete_store_inventory():
@@ -196,4 +195,4 @@ def reset_db():
 if __name__ == "__main__":
 
     #Start the app to run on a port of your choosing
-    app.run(port=5649, debug=True)
+    app.run(port=5651, debug=True)
