@@ -68,15 +68,16 @@ FROM
 
 --- Equipment Queries ---
 SELECT
+    eq.id,
     eq.item_name,
-    ca.activity_type
+    ca.activity_type AS category
 FROM
     Equipment eq
     JOIN Categories ca ON eq.category_id = ca.id;
 
 --- Reservations Queries ---
 SELECT
-    res.*,
+    res. *,
     eq.item_name,
     cu.first_name,
     cu.last_name

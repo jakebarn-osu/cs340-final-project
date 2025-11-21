@@ -1,11 +1,32 @@
-# Citation for the following function:
-# Date: 11/19/2025
-# Copied from /OR/ Adapted from /OR/ Based on:
-# All PL code was adapted from coding examples in the exploration modules 
+-- Citation for the following function:
+-- Date: 11/19/2025
+-- Copied from /OR/ Adapted from /OR/ Based on:
+-- All PL code was adapted from coding examples in the exploration modules 
 
-  -- --------------------------------------
-  -- sp_delete_inventory_item
-  -- --------------------------------------
+
+-- --------------------------------------
+-- sp_delete_inventory_item
+-- --------------------------------------
+DROP PROCEDURE IF EXISTS sp_delete_reservation;
+
+DELIMITER //
+CREATE PROCEDURE sp_delete_reservation (IN input_reservation_id INT)
+BEGIN 
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    SELECT 'Error deleting inventory item';
+  END;
+
+  START TRANSACTION;
+  DELETE FROM Reservations WHERE id = input_reservation_id;
+  COMMIT;
+END //
+DELIMITER ;
+
+-- --------------------------------------
+-- sp_delete_inventory_item
+-- --------------------------------------
 DROP PROCEDURE IF EXISTS sp_delete_inventory_item;
 
 DELIMITER //

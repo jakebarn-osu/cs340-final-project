@@ -26,7 +26,6 @@
     <tbody>
         {% for reservation in reservations %}
         <tr>
-
             <td>{{ reservation["reservation_id"]}}</td>
             <td>{{ reservation["customer_id"]}}</td>
             <td>{{ reservation["customer_first_name"]}}</td>
@@ -41,7 +40,10 @@
                 <button>Edit</button>
             </td>
             <td>
-                <button>Delete</button>
+                <form id="delete_reservation_form" method="POST" action="/reservations-delete">
+					<input type="hidden" name="delete_reservation_id" value="{{ reservation['reservation_id'] }}">
+					<button type="submit">Delete</button>
+				</form>
             </td>
         </tr>
         {% endfor %}
@@ -51,22 +53,20 @@
 <p><em>No reservations found.</em></p>
 {% endif %}
 <h3>Add New Reservation</h3>
-<form method="POST" action="/customers">
-
+<form method="POST" action="/reservations">
     <label for="customer_id">Customer:</label>
     <select id="customer_id" name="customer_id">
-        <option value="1">Jake Barnett (1)</option>
-        <option value="2">Eric Mitchell (2)</option>
+        {% for customer in customers %}
+            <option value="{{ customer['id'] }}">{{ customer["first_name"]}} {{ customer["last_name"]}}</option>
+        {% endfor %}
     </select>
-
-
-
+    
     <label for="equipment_id">Item:</label>
     <select id="equipment_id" name="equipment_id">
-        <option value="1">Snowboard</option>
-        <option value="2">Skis</option>
+        {% for eq in equipment %}
+            <option value="{{ equipment['id'] }}">{{ equipment["name"]}}</option>
+        {% endfor %}
     </select>
-
 
     <label for="start_date">Start Date:</label>
     <input type="text" id="start_date" name="start_date" required />
@@ -78,25 +78,20 @@
 </form>
 
 <h3>Edit Existing Reservation</h3>
-<form method="POST" action="/customers">
+<form method="POST" action="/reservations-edit">
     <label for="customer_id">Customer:</label>
     <select id="customer_id" name="customer_id">
-        <option value="1">Jake Barnett (1)</option>
-        <option value="2">Eric Mitchell (2)</option>
-    </select>
-
-    <label for="customer_id">Customer:</label>
-    <select id="customer_id" name="customer_id">
-        <option value="1">Jake Barnett (1)</option>
-        <option value="2">Eric Mitchell (2)</option>
+        {% for customer in customers %}
+            <option value="{{ customer['id'] }}">{{ customer["first_name"]}} {{ customer["last_name"]}}</option>
+        {% endfor %}
     </select>
 
     <label for="equipment_id">Item:</label>
     <select id="equipment_id" name="equipment_id">
-        <option value="1">Snowboard</option>
-        <option value="2">Skis</option>
+        {% for eq in equipment %}
+            <option value="{{ equipment['id'] }}">{{ equipment["name"]}}</option>
+        {% endfor %}
     </select>
-
 
     <label for="start_date">Start Date:</label>
     <input type="text" id="start_date" name="start_date" required />
