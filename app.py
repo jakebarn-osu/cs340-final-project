@@ -85,10 +85,9 @@ def get_store_inventory():
                JOIN Equipment ON InventoryItems.equipment_id = Equipment.id \
                JOIN Stores ON InventoryItems.store_id = Stores.id \
                ORDER BY Stores.address, Equipment.item_name;"
-      equip_query = "SELECT * FROM equipment;"
       inventory_items = db.query(dbConnection, query1).fetchall()
       stores = db.query(dbConnection, store_query).fetchall()
-      equipment = db.query(dbConnection, equipment_query)
+      equipment = db.query(dbConnection, equipment_query).fetchall()
       return render_template("/store-inventory.html", inventory_items=inventory_items, stores=stores, equipment=equipment)
    except Exception as e:
       print(f"Error executing query: {e}")
@@ -128,7 +127,7 @@ def add_new_store_inventory_item():
          equipment_id = request.form["add_item_to_store_equipment_id"]
          store_id = request.form["add_item_to_store_store_id"]
          quantity = request.form["add_item_to_store_quantity"]
-         
+
          add_item_query = "CALL sp_insert_inventory_item(%s, %s, %s);"
          cursor.execute(add_item_query, (equipment_id, store_id, quantity))
 

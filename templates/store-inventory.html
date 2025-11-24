@@ -40,60 +40,106 @@
 	<p><em>No inventory found.</em></p>
 {% endif %}
 
-<h3>Add New Item</h3>
-<form method="POST" id="add_item_to_store_form" action="/store-add-new-item">
-	<label for="add_item_to_store_store_id">Store Address: </label>
-	<select id="stores" name="add_item_to_store_store_id">
-    <option value="" disabled selected>Choose a Store</option>
-    {% for store in stores %}
-					<option value="{{ store.id }}">{{ store.address }}</option>
-    {% endfor %}
-	</select>
+	<h3>Add New Item</h3>
+	<form method="POST" id="add_item_to_store_form" action="/store-add-new-item">
+		<label for="add_item_to_store_store_id">Store Address: </label>
+		<select id="stores" name="add_item_to_store_store_id">
+			<option value="" disabled selected>Choose a Store</option>
+			{% for store in stores %}
+						<option value="{{ store.id }}">{{ store.address }}</option>
+			{% endfor %}
+		</select>
+			
+		<label for="add_item_to_store">Equipment Name: </label>
+		<select id="to_add_item" name="add_item_to_store_equipment_id">Choose equipment>
+			<option value=""  disabled selected>Select equipment</option>
+			{% for item in equipment %}
+						<option value="{{ item.id }}"> {{ item.item_name }}</option>
+			{% endfor %}			
+		</select>
+
+		<label for="new-quantity">Quantity:</label>
+		<input type="number" name="add_item_to_store_quantity" id="add_item_to_store_quantity" min="1"/>
+		<input type="submit"/>
+	</form>
+
+	<h3>Update Store Equipment Inventory</h3>
+	<form method="POST" class="cuForm" id="store-update-inventory-item" action="/store-update-inventory-item">
+		<label for="update_store_id">Store Address: </label>
+		<select name="update_inven_store_id" id="update_store_id" required>Choose a Store
+			<option value="" disabled selected>Choose a Store</option>
+			{% for store in stores %}
+						<option value="{{ store.id }}">{{ store.address }}</option>
+			{% endfor %}
+		</select>
+
+		<label for="update_equipment_id">Current Equipment Item: </label>
+		<select name="update_inven_original_equipment_id" id="original_equipment_menu" required>Choose equipment
+				<option value="" id="equip_default_option" disabled selected>Select Equipment</option>
+		</select>
+
+		<label for="update_new_equipment_id">Updated Equipment Item: (Optional)</label>
+		<select name="update_inven_new_equipment_id" id="new_equipment_menu">Choose equipment
+			<option value="" disabled selected>New Equipment Item</option>
+		</select>
+
+		<label for="new-quantity">Quantity:</label>
+		<input type="number" name="update_inven_item_quantity" id="update_item_quantity" min="1"/>
+
+		<input type="submit"/>
+	</form>
+
+	<script>
+		const equipmentData ={{ equipment | tojson}}
+		const inventoryItems = {{inventory_items | tojson}}
 		
-	<label for="add_item_to_store">Equipment Name: </label>
-	<select id="to_add_item" name="add_item_to_store_equipment_id">Choose equipment>
-		<option value="" disabled selected>Select equipment</option>
-		{% for item in equipment %}
-					<option value="{{ item.id }}"> {{ item.item_name }}</option>
-		{% endfor %}			
-	</select>
+		document.getElementById("update_store_id").addEventListener("change", function(){
+			let storeId = this.value
+			if (storeId) {
+				updateStoreEquipment(storeId)
+				updateChangeEquip(storeId)
+			}
+		})
+		function updateStoreEquipment(storeId) {
+			let menu = document.getElementById("original_equipment_menu")
+			menu.innerHTML = ""
+			const defaultOption = document.createElement("option")
+			defaultOption.disabaled = true
+			defaultOption.selected = true
+			defaultOption.textContent = "Select Equipment"
+			menu.appendChild(defaultOption)
 
-	<label for="new-quantity">Quantity:</label>
-	<input type="number" name="add_item_to_store_quantity" id="add_item_to_store_quantity" min="1"/>
-	<input type="submit"/>
-</form>
+			inventoryItems.forEach(item => {
+				if (storeId == item.store_id) {
+					const option = document.createElement("option")
+					option.value = item.equipment_id
+					option.textContent = item.item_name
+					menu.appendChild(option)
+				}
+			});
+		}
 
-<h3>Update Store Equipment Inventory</h3>
-<form method="POST" class="cuForm" id="store-update-inventory-item" action="/store-update-inventory-item">
-	<label for="update_store_id">Store Address: </label>
-	<select name="update_inven_store_id" id="update_store_id" required>Choose a Store
-    <option value="" disabled selected>Choose a Store</option>
-    {% for store in stores %}
-					<option value="{{ store.id }}">{{ store.address }}</option>
-    {% endfor %}
-	</select>
+		function updateChangeEquip(storeId) {
+			let menu = document.getElementById("new_equipment_menu")
+			menu.innerHTML = ""
+			const defaultOption = document.createElement("option")
+			defaultOption.disabaled = true
+			defaultOption.selected = true
+			defaultOption.textContent = "Select Equipment"
+			menu.appendChild(defaultOption)
 
-	<label for="update_equipment_id">Current Equipment Item: </label>
-	<select name="update_inven_original_equipment_id" required>Choose equipment
-			<option value="" disabled selected>Select Equipment</option>
-		{% for item in equipment %}
-					<option value="{{ equipment.id }}"> {{ item.item_name }}</option>
-		{% endfor %}	
-	</select>
+			const filteredItems = equipmentData.filter(eq =>
+				!inventoryItems.some(inv => inv.store_id == storeId && inv.equipment_id === eq.id)
+				);
 
-	<label for="update_new_equipment_id">Updated Equipment Item: (Optional)</label>
-	<select name="update_inven_new_equipment_id">Choose equipment
-		<option value="" disabled selected>New Equipment Item</option>
-		{% for equipment in equipment %}
-					<option value="{{ equipment.id }}"> {{ equipment.item_name }}</option>
-		{% endfor %}	
-	</select>
+			filteredItems.forEach(item => {
+				const option = document.createElement("option")
+				option.value = item.id
+				option.textContent = item.item_name
+				menu.appendChild(option)
+			})
+		}
 
-	<label for="new-quantity">Quantity:</label>
-	<input type="number" name="update_inven_item_quantity" id="update_item_quantity" min="1"/>
-
-	<input type="submit"/>
-</form>
-
+	</script>	
 {% endblock %}
 
