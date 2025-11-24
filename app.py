@@ -145,14 +145,20 @@ def update_inventory_item():
       cursor = dbConnection.cursor()
       store_id = request.form["update_inven_store_id"]
       orig_equip_id = request.form["update_inven_original_equipment_id"]
-      new_equip_id = request.form["update_inven_new_equipment_id"]
-      quantity = request.form["update_inven_item_quantity"]
 
-      return request.form
+      new_equip_id = request.form["update_inven_new_equipment_id"]
+      new_equip_id = int(new_equip_id) if new_equip_id else None
+      
+      quantity = request.form["update_inven_item_quantity"]
+      quantity = int(quantity) if quantity else None
+
+      update_inventory_item = "CALL sp_update_inventory_item(%s, %s, %s, %s);"
+      cursor.execute(update_inventory_item, (store_id, orig_equip_id, new_equip_id, quantity))
+      dbConnection.commit()
+      return redirect("/store-inventory")
    except Exception as e:
       print(f"Erorr has occured: {e}")
       return ("Must provide either new equipment or quantity", 500)
-
 
 @app.route("/customers", methods=["GET", "POST"])
 def customers():

@@ -64,6 +64,8 @@
 	</form>
 
 	<h3>Update Store Equipment Inventory</h3>
+	<p>To update the quantity of an item available at a store, select the store then Current Equipment Item. Enter the new quantity and submit.</p>
+	<p>To change the equipment item in a store's inventory select the store. Select the item you want to replace in Current Equipment Item and the new updated item in Updated Equipment Item and submit.</p>
 	<form method="POST" class="cuForm" id="store-update-inventory-item" action="/store-update-inventory-item">
 		<label for="update_store_id">Store Address: </label>
 		<select name="update_inven_store_id" id="update_store_id" required>Choose a Store
@@ -100,6 +102,7 @@
 				updateChangeEquip(storeId)
 			}
 		})
+		
 		function updateStoreEquipment(storeId) {
 			let menu = document.getElementById("original_equipment_menu")
 			menu.innerHTML = ""
@@ -125,6 +128,7 @@
 			const defaultOption = document.createElement("option")
 			defaultOption.disabaled = true
 			defaultOption.selected = true
+			defaultOption.value = ""	
 			defaultOption.textContent = "Select Equipment"
 			menu.appendChild(defaultOption)
 
