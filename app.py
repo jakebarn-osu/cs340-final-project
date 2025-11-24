@@ -24,6 +24,8 @@ FROM
    JOIN Categories ca ON eq.category_id = ca.id;
 """
 
+store_query = "SELECT Stores.id, Stores.address, Stores.city, Stores.zip_code FROM Stores;"
+
 reservations_query = """
 SELECT
    cu.id as customer_id,
@@ -68,15 +70,14 @@ def home():
 def stores():
    try:
       dbConnection = db.connectDB()
-      query1 = "SELECT Stores.id, Stores.address, Stores.city, Stores.zip_code FROM Stores;"
-      stores = db.query(dbConnection, query1).fetchall()
+      stores = db.query(dbConnection, store_query).fetchall()
       return render_template("/stores.html", stores=stores)
    except Exception as e:
       print(f"Error executing queries: {e}")
       return "An error has occured while exceuting DB query", 500
    
 @app.route("/store-inventory", methods=["GET"])
-def store_inventory():
+def get_store_inventory():
    try:
       dbConnection = db.connectDB()
       query1 = "SELECT InventoryItems.equipment_id, InventoryItems.store_id, Equipment.item_name, \
@@ -84,8 +85,11 @@ def store_inventory():
                JOIN Equipment ON InventoryItems.equipment_id = Equipment.id \
                JOIN Stores ON InventoryItems.store_id = Stores.id \
                ORDER BY Stores.address, Equipment.item_name;"
+      equip_query = "SELECT * FROM equipment;"
       inventory_items = db.query(dbConnection, query1).fetchall()
-      return render_template("/store-inventory.html", inventory_items=inventory_items, stores=stores)
+      stores = db.query(dbConnection, store_query).fetchall()
+      equipment = db.query(dbConnection, equipment_query)
+      return render_template("/store-inventory.html", inventory_items=inventory_items, stores=stores, equipment=equipment)
    except Exception as e:
       print(f"Error executing query: {e}")
       return "An error has occured while exceuting DB query", 500
@@ -114,6 +118,41 @@ def delete_store_inventory():
    finally:
       if "dbConnection" in locals() and dbConnection:
          dbConnection.close()
+
+@app.route("/store-add-new-item", methods=["POST"])
+def add_new_store_inventory_item():
+      try:
+         dbConnection = db.connectDB()
+         cursor = dbConnection.cursor()
+
+         equipment_id = request.form["add_item_to_store_equipment_id"]
+         store_id = request.form["add_item_to_store_store_id"]
+         quantity = request.form["add_item_to_store_quantity"]
+         
+         add_item_query = "CALL sp_insert_inventory_item(%s, %s, %s);"
+         cursor.execute(add_item_query, (equipment_id, store_id, quantity))
+
+         dbConnection.commit()
+         
+         return redirect("/store-inventory")
+      except Exception as e:
+         print(f"Error executing queries: {e}")
+         return ("An error occured adding store inventory item", 500)   
+
+@app.route("/store-update-inventory-item", methods=["POST"])
+def update_inventory_item():
+   try:
+      dbConnection = db.connectDB()
+      cursor = dbConnection.cursor()
+      store_id = request.form["update_inven_store_id"]
+      orig_equip_id = request.form["update_inven_original_equipment_id"]
+      new_equip_id = request.form["update_inven_new_equipment_id"]
+      quantity = request.form["update_inven_item_quantity"]
+
+      return request.form
+   except Exception as e:
+      print(f"Erorr has occured: {e}")
+      return ("Must provide either new equipment or quantity", 500)
 
 
 @app.route("/customers", methods=["GET", "POST"])

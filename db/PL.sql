@@ -5,7 +5,7 @@
 
 
 -- --------------------------------------
--- sp_delete_inventory_item
+-- sp_delete_reservation
 -- --------------------------------------
 DROP PROCEDURE IF EXISTS sp_delete_reservation;
 
@@ -15,7 +15,7 @@ BEGIN
   DECLARE EXIT HANDLER FOR SQLEXCEPTION
   BEGIN
     ROLLBACK;
-    SELECT 'Error deleting inventory item';
+    SELECT 'Error deleting reservation';
   END;
 
   START TRANSACTION;
@@ -46,9 +46,61 @@ BEGIN
 END //
 DELIMITER ;
 
-  -- --------------------------------------
-  -- sp_reset_db
-  -- --------------------------------------
+-- --------------------------------------
+-- sp_insert_inventory_item
+-- --------------------------------------
+DELIMITER //
+DROP PROCEDURE IF EXISTS sp_insert_inventory_item;
+CREATE PROCEDURE sp_insert_inventory_item (
+  IN n_equipment_id INT,
+  IN n_store_id INT,
+  IN n_quantity INT
+)
+BEGIN
+  INSERT INTO `InventoryItems` (equipment_id, store_id, quantity)
+  VALUES (n_equipment_id, n_store_id, n_quantity);
+END //
+DELIMITER ;
+
+-- --------------------------------------
+-- sp_update_inventory_item
+-- --------------------------------------
+# Citation for the following function:
+# Date: 11/23/2025
+# sp_update_inventory_item code provided and altered from Microsoft Copilot
+# Copilot was provided the DML code for updating quantity of InventoryItems and updating InventoryItems.equipment_id. 
+# Copilot was then prompted to provide the PLSQL for the SQL code. It was also instructed that p_quantity or p_new_equip_id
+# could be NULL values.
+DELIMITER //
+DROP PROCEDURE IF EXISTS sp_update_inventory_item;
+CREATE PROCEDURE sp_update_inventory_item (
+  IN p_store_id INT,
+  IN p_original_equip_id INT,
+  IN p_new_equip_id INT,
+  IN p_quantity INT
+)
+BEGIN
+    -- Update quantity if provided
+    IF p_quantity IS NOT NULL THEN
+        UPDATE InventoryItems
+        SET quantity = p_quantity
+        WHERE store_id = p_store_id
+          AND equipment_id = p_original_equip_id;
+    END IF;
+
+    -- Update equipment_id if provided
+    IF p_new_equip_id IS NOT NULL THEN
+        UPDATE InventoryItems
+        SET equipment_id = p_new_equip_id
+        WHERE store_id = p_store_id
+          AND equipment_id = p_original_equip_id;
+    END IF;
+END //
+
+DELIMITER ;
+-- --------------------------------------
+-- sp_reset_db
+-- --------------------------------------
 DROP PROCEDURE IF EXISTS sp_reset_db;
 DELIMITER //
 CREATE PROCEDURE sp_reset_db()
