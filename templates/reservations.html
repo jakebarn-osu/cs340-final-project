@@ -37,7 +37,7 @@
             <td>{{ reservation["actual_start_date"]}}</td>
             <td>{{ reservation["actual_end_date"]}}</td>
             <td>
-                <button>Edit</button>
+                <button onclick='fillEditForm({{ reservation|tojson }})'>Edit</button>
             </td>
             <td>
                 <form id="delete_reservation_form" method="POST" action="/reservations-delete">
@@ -64,7 +64,7 @@
     <label for="equipment_id">Item:</label>
     <select id="equipment_id" name="equipment_id">
         {% for eq in equipment %}
-            <option value="{{ equipment['id'] }}">{{ equipment["name"]}}</option>
+            <option value="{{ eq['id'] }}">{{ eq['name'] }}</option>
         {% endfor %}
     </select>
 
@@ -79,33 +79,45 @@
 
 <h3>Edit Existing Reservation</h3>
 <form method="POST" action="/reservations-edit">
-    <label for="customer_id">Customer:</label>
-    <select id="customer_id" name="customer_id">
+    <label for="edit_customer_id">Customer:</label>
+    <select id="edit_customer_id" name="edit_customer_id">
         {% for customer in customers %}
             <option value="{{ customer['id'] }}">{{ customer["first_name"]}} {{ customer["last_name"]}}</option>
         {% endfor %}
     </select>
 
-    <label for="equipment_id">Item:</label>
-    <select id="equipment_id" name="equipment_id">
+    <label for="edit_equipment_id">Item:</label>
+    <select id="edit_equipment_id" name="edit_equipment_id">
         {% for eq in equipment %}
-            <option value="{{ equipment['id'] }}">{{ equipment["name"]}}</option>
+            <option value="{{ eq['id'] }}">{{ eq['name'] }}</option>
         {% endfor %}
     </select>
 
-    <label for="start_date">Start Date:</label>
-    <input type="text" id="start_date" name="start_date" required />
+    <label for="edit_start_date">Start Date:</label>
+    <input type="text" id="edit_start_date" name="edit_start_date" required />
 
-    <label for="end_date">End Date:</label>
-    <input type="text" id="end_date" name="end_date" required />
+    <label for="edit_end_date">End Date:</label>
+    <input type="text" id="edit_end_date" name="edit_end_date" required />
 
-    <label for="actual_start_date">Actual Start Date:</label>
-    <input type="text" id="actual_start_date" name="actual_start_date" required />
+    <label for="edit_actual_start_date">Actual Start Date:</label>
+    <input type="text" id="edit_actual_start_date" name="edit_actual_start_date" required />
 
-    <label for="actual_end_date">Actual End Date:</label>
-    <input type="text" id="actual_end_date" name="actual_end_date" required />
+    <label for="edit_actual_end_date">Actual End Date:</label>
+    <input type="text" id="edit_actual_end_date" name="edit_actual_end_date" required />
 
     <input type="submit" value="Edit Reservation" />
 </form>
+
+<script>
+    function fillEditForm(reservation) {
+        // Fill the form fields
+        document.getElementById('edit_customer_id').value = reservation.customer_id;
+        document.getElementById('edit_equipment_id').value = reservation.equipment_id;
+        document.getElementById('edit_start_date').value = reservation.start_date;
+        document.getElementById('edit_end_date').value = reservation.end_date
+        document.getElementById('edit_actual_start_date').value = reservation.actual_start_date;
+        document.getElementById('edit_actual_end_date').value = reservation.actual_end_date;
+    }
+</script>
 
 {% endblock %}
