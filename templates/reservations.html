@@ -69,17 +69,20 @@
     </select>
 
     <label for="start_date">Start Date:</label>
-    <input type="text" id="start_date" name="start_date" required />
+    <input type="date" id="start_date" name="start_date" required />
 
     <label for="end_date">End Date:</label>
-    <input type="text" id="end_date" name="end_date" required />
+    <input type="date" id="end_date" name="end_date" required />
 
     <input type="submit" value="Add Reservation" />
 </form>
 
 <h3>Edit Existing Reservation</h3>
 <form method="POST" action="/reservations-edit">
+    <input style="display: none;" type="text" id="edit_reservation_id" name="edit_reservation_id" required />
+
     <label for="edit_customer_id">Customer:</label>
+
     <select id="edit_customer_id" name="edit_customer_id">
         {% for customer in customers %}
             <option value="{{ customer['id'] }}">{{ customer["first_name"]}} {{ customer["last_name"]}}</option>
@@ -94,23 +97,25 @@
     </select>
 
     <label for="edit_start_date">Start Date:</label>
-    <input type="text" id="edit_start_date" name="edit_start_date" required />
+    <input type="date" id="edit_start_date" name="edit_start_date" required />
 
     <label for="edit_end_date">End Date:</label>
-    <input type="text" id="edit_end_date" name="edit_end_date" required />
+    <input type="date" id="edit_end_date" name="edit_end_date" required />
 
     <label for="edit_actual_start_date">Actual Start Date:</label>
-    <input type="text" id="edit_actual_start_date" name="edit_actual_start_date" required />
+    <input type="date" id="edit_actual_start_date" name="edit_actual_start_date" />
 
     <label for="edit_actual_end_date">Actual End Date:</label>
-    <input type="text" id="edit_actual_end_date" name="edit_actual_end_date" required />
+    <input type="date" id="edit_actual_end_date" name="edit_actual_end_date" />
 
     <input type="submit" value="Edit Reservation" />
 </form>
 
 <script>
     function fillEditForm(reservation) {
+        console.log(reservation)
         // Fill the form fields
+        document.getElementById('edit_reservation_id').value = reservation.reservation_id;
         document.getElementById('edit_customer_id').value = reservation.customer_id;
         document.getElementById('edit_equipment_id').value = reservation.equipment_id;
         document.getElementById('edit_start_date').value = reservation.start_date;

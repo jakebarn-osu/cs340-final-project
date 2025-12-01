@@ -1,65 +1,26 @@
-from typing import List
-from flask import Flask, render_template, redirect
-from flask import request
+from flask import Flask, render_template, redirect, request
 import db.db_connector as db 
 
 port = 8000
-
 app = Flask(__name__)
 
-customers_query = """
-SELECT
-   *
-FROM
-   Customers;
-"""
+# IMPORTANT: must be imported after the app declaration
+import routes.reservations
+import routes.customers
+import routes.equipment
+from routes.equipment import equipment_query
 
-equipment_query = """
-SELECT
-   eq.id,
-   eq.item_name as name,
-   ca.activity_type as category
-FROM
-   Equipment eq
-   JOIN Categories ca ON eq.category_id = ca.id;
-"""
+
+
+@app.errorhandler(500)
+def handle_all_exceptions(error):
+   app.logger.exception(">>> Error <<<")
+   app.logger.exception(error)
+
+   return render_template("error.html"), 500
 
 store_query = "SELECT Stores.id, Stores.address, Stores.city, Stores.zip_code FROM Stores;"
 
-reservations_query = """
-SELECT
-   cu.id as customer_id,
-   cu.first_name as customer_first_name,
-   cu.last_name as customer_last_name,
-   eq.id as equipment_id,
-   eq.item_name as equipment_name,
-   res.id as reservation_id,
-   res.start_date as start_date,
-   res.end_date as end_date,
-   res.actual_start_date as actual_start_date,
-   res.actual_end_date as actual_end_date
-FROM
-   Reservations res
-   JOIN Customers cu ON res.customer_id = cu.id
-   JOIN Equipment eq ON res.equipment_id = eq.id;
-"""
-
-def fetchAll(query: str) -> List[dict[str, str]]:
-   dbConnection = db.connectDB()
-   rows = db.query(dbConnection, query).fetchall()
-   return rows
-
-def delete_reservation_by_id(reservation_id: str):
-      dbConnection = db.connectDB()
-      cursor = dbConnection.cursor()
-      delete_query = "CALL sp_delete_reservation(%s);"
-      
-      cursor.execute(delete_query, (reservation_id))
-
-      # while cursor.nextset():
-      #    pass
-
-      dbConnection.commit()
 
 # Routes
 @app.route("/", methods=["GET"])
@@ -159,47 +120,6 @@ def update_inventory_item():
    except Exception as e:
       print(f"Erorr has occured: {e}")
       return ("Must provide either new equipment or quantity", 500)
-
-@app.route("/customers", methods=["GET", "POST"])
-def customers():
-   if request.method == "POST":
-      # TODO:
-      # Sanitize Input
-      first_name = request.form.get("first_name") or ""
-      last_name = request.form.get("last_name") or ""
-      phone = request.form.get("phone_number") or ""
-      address = request.form.get("address") or ""
-
-      # TODO:
-      # Save Customer To DB
-
-      # redirect clears POST data and reloads table
-      return redirect("/customers")
-   
-   customers = fetchAll(customers_query)
-   return render_template("/customers.html", customers=customers)
-
-@app.route("/equipment", methods=["GET", "POST"])
-def equipment():
-   equipment = fetchAll(equipment_query)
-   return render_template("/equipment.html", equipment=equipment)
-
-@app.route("/reservations", methods=["GET", "POST"])
-def reservations():
-   if request.method == "POST":
-      #TODO: Handle create reservation
-      return redirect("/reservations")
-   
-   reservations = fetchAll(reservations_query)
-   customers = fetchAll(customers_query)
-   equipment = fetchAll(equipment_query)
-   return render_template("/reservations.html", reservations=reservations, customers=customers, equipment=equipment)
-
-@app.route("/reservations-delete", methods=["POST"])
-def reservations_delete():
-   reservation_id = request.form.get("delete_reservation_id") or ""
-   delete_reservation_by_id(reservation_id)
-   return redirect("/reservations")
 
 @app.route("/categories", methods=["GET", "POST"])
 def categories():

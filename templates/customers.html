@@ -26,7 +26,10 @@
             <td>{{ customer["phone_number"] }}</td>
             <td>{{ customer["address"] }}</td>
             <td>
-                <button>Delete</button>
+                <form id="delete_customer_form" method="POST" action="/customers-delete">
+					<input type="hidden" name="delete_customer_id" value="{{ customer['id'] }}">
+					<button type="submit">Delete</button>
+				</form>
             </td>
         </tr>
         {% endfor %}
@@ -35,5 +38,22 @@
 {% else %}
 <p><em>No customers found.</em></p>
 {% endif %}
+
+<h3>Add New Customer</h3>
+<form method="POST" action="/customers">
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name" required />
+
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" name="last_name" required />
+
+    <label for="phone_number">Phone Number:</label>
+    <input type="text" id="phone_number" name="phone_number" required />
+
+    <label for="address">Address:</label>
+    <input type="text" id="address" name="address" required />
+
+    <input type="submit" value="Add Customer" />
+</form>
 
 {% endblock %}
