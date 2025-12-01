@@ -17,7 +17,7 @@ FROM
 equipment_query = """
 SELECT
    eq.id,
-   eq.item_name,
+   eq.item_name as name,
    ca.activity_type as category
 FROM
    Equipment eq
