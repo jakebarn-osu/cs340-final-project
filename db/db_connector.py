@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from MySQLdb import connect, Connection, cursors 
 import os
 
@@ -25,7 +25,7 @@ def connectDB(host = host, user = user, passwd = passwd, db = db) -> Connection:
     dbConnection = connect(host,user,passwd,db)
     return dbConnection
 
-def query(dbConnection:Connection, query: str, query_params = ()) -> cursors.DictCursor:
+def query(dbConnection: Connection, query: str, query_params = ()) -> cursors.DictCursor:
     '''
     executes a given SQL query on the given db connection and returns a Cursor object
     dbConnection: a MySQLdb connection object created by connectDB()
@@ -52,3 +52,32 @@ def query(dbConnection:Connection, query: str, query_params = ()) -> cursors.Dic
     dbConnection.commit()
     
     return cursor
+
+def fetchAll(queryString: str) -> List[dict[str, str]]:
+   dbConnection = connectDB()
+   rows = query(dbConnection, queryString).fetchall()
+   return rows
+
+def run_db(lambda_query):
+    """
+    Manages the DB connection before/after a query.
+    """
+    conn = None
+    cursor = None
+
+    try:
+        conn = connectDB()
+        cursor = conn.cursor()
+
+        lambda_query(cursor)
+
+        conn.commit()
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        raise e
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()

@@ -25,6 +25,49 @@ END //
 DELIMITER ;
 
 -- --------------------------------------
+-- sp_insert_reservation
+-- --------------------------------------
+DELIMITER //
+DROP PROCEDURE IF EXISTS sp_insert_reservation;
+CREATE PROCEDURE sp_insert_reservation (
+  IN r_customer_id int,
+  IN r_equipment_id int,
+  IN r_start_date datetime,
+  IN r_end_date datetime
+)
+BEGIN
+  INSERT INTO `Reservations` (customer_id, equipment_id, start_date, end_date)
+  VALUES (r_customer_id, r_equipment_id, r_start_date, r_end_date);
+END //
+DELIMITER ;
+
+-- --------------------------------------
+-- sp_update_reservation
+-- --------------------------------------
+DELIMITER //
+DROP PROCEDURE IF EXISTS sp_update_reservation;
+CREATE PROCEDURE sp_update_reservation (
+  IN r_id INT,
+  IN r_customer_id INT,
+  IN r_equipment_id INT,
+  IN r_start_date DATETIME,
+  IN r_end_date DATETIME,
+  IN r_actual_start_date DATETIME,
+  IN r_actual_end_date DATETIME
+)
+BEGIN
+  UPDATE Reservations
+  SET customer_id       = r_customer_id,
+      equipment_id      = r_equipment_id,
+      start_date        = r_start_date,
+      end_date          = r_end_date,
+      actual_start_date = r_actual_start_date,
+      actual_end_date   = r_actual_end_date
+  WHERE id = r_id;
+END //
+DELIMITER ;
+
+-- --------------------------------------
 -- sp_delete_inventory_item
 -- --------------------------------------
 DROP PROCEDURE IF EXISTS sp_delete_inventory_item;
@@ -96,6 +139,44 @@ BEGIN
           AND equipment_id = p_original_equip_id;
     END IF;
 END //
+
+
+-- --------------------------------------
+-- sp_insert_customer
+-- --------------------------------------
+DELIMITER //
+DROP PROCEDURE IF EXISTS sp_insert_customer;
+CREATE PROCEDURE sp_insert_customer (
+  IN c_first_name varchar(45),
+  IN c_last_name varchar(45),
+  IN c_phone_number varchar(45),
+  IN c_address varchar(45)
+)
+BEGIN
+  INSERT INTO `Customers` (first_name, last_name, phone_number, address)
+  VALUES (c_first_name, c_last_name, c_phone_number, c_address);
+END //
+DELIMITER ;
+
+-- --------------------------------------
+-- sp_delete_customer
+-- --------------------------------------
+DROP PROCEDURE IF EXISTS sp_delete_customer;
+
+DELIMITER //
+CREATE PROCEDURE sp_delete_customer (IN input_customer_id INT)
+BEGIN 
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    SELECT 'Error deleting customer';
+  END;
+
+  START TRANSACTION;
+  DELETE FROM Customers WHERE id = input_customer_id;
+  COMMIT;
+END //
+DELIMITER ;
 
 DELIMITER ;
 -- --------------------------------------
@@ -225,8 +306,8 @@ BEGIN
 	equipment_id int,
 	start_date datetime NOT NULL,
 	end_date datetime NOT NULL,
-	actual_start_date datetime NOT NULL,
-	actual_end_date datetime NOT NULL,
+	actual_start_date datetime,
+	actual_end_date datetime,
 	FOREIGN KEY (customer_id) REFERENCES Customers(id)
 			ON DELETE CASCADE,
 	FOREIGN KEY (equipment_id) REFERENCES Equipment(id)
