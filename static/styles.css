@@ -1,0 +1,149 @@
+/* Reset default browser styles */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Body and text */
+body {
+    font-family: 'Arial', sans-serif; /* Clean, modern font */
+    background-color: #f4f7fa; /* Light grey background */
+    color: #333; /* Dark text for readability */
+    line-height: 1.6;
+    margin: 1rem; /* Add a small margin around the webpage */
+}
+
+/* General spacing classes */
+.m-0 { margin: 0; }
+.mt-4 { margin-top: 1rem; }
+.mb-4 { margin-bottom: 1rem; }
+.ml-4 { margin-left: 1rem; }
+.p-4 { padding: 1rem; }
+
+/* Typography */
+h1, h2, h3, h4 {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #2d3e50; /* Dark blue-gray for headings */
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+
+/* Text utilities */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+table th,
+table td {
+    padding: 1rem;
+    text-align: left;
+    border: 1px solid #e0e7ff; /* Light border for clean look */
+}
+
+table th {
+    background-color: #f1f5f9; /* Very light blue for table headers */
+    color: #4b5563; /* Dark gray for text in headers */
+    font-weight: bold;
+}
+
+table tr:hover td {
+    background-color: #f9fafb; /* Light gray hover for rows */
+}
+
+/* Forms */
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid #d1d5db; /* Light gray border */
+    background-color: white;
+    color: #4b5563;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #3b82f6; /* Light blue focus */
+    outline: none;
+}
+
+/* Button Styles */
+button {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.375rem;
+    background-color: #3b82f6; /* Light blue background */
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2563eb; /* Slightly darker blue on hover */
+}
+
+button:disabled {
+    background-color: #e0e7ff;
+    cursor: not-allowed;
+    color: #9ca3af;
+}
+
+/* Navigation */
+nav {
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+nav ul li {
+    margin-right: 1.5rem;
+}
+
+nav ul li:last-child {
+    margin-right: 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #3b82f6; /* Light blue color on hover */
+}
+
+/* Additional Utility Classes */
+.rounded { border-radius: 0.375rem; }
+.bg-light { background-color: #f1f5f9; } /* Light background color */
+.bg-primary { background-color: #3b82f6; } /* Primary blue background */
+.text-dark { color: #2d3e50; } /* Dark gray text */
+.text-muted { color: #6b7280; } /* Muted text color */
