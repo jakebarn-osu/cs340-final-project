@@ -9,11 +9,11 @@
 
 /* Body and text */
 body {
-    font-family: 'Arial', sans-serif; /* Clean, modern font */
-    background-color: #f4f7fa; /* Light grey background */
-    color: #333; /* Dark text for readability */
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
     line-height: 1.6;
-    margin: 1rem; /* Add a small margin around the webpage */
+    margin: 1rem;
 }
 
 /* General spacing classes */
@@ -27,7 +27,7 @@ body {
 h1, h2, h3, h4 {
     font-weight: 600;
     margin-bottom: 0.75rem;
-    color: #2d3e50; /* Dark blue-gray for headings */
+    color: #2d3e50;
 }
 
 h1 { font-size: 2rem; }
@@ -51,46 +51,63 @@ table th,
 table td {
     padding: 1rem;
     text-align: left;
-    border: 1px solid #e0e7ff; /* Light border for clean look */
+    border: 1px solid #e0e7ff;
 }
 
 table th {
-    background-color: #f1f5f9; /* Very light blue for table headers */
-    color: #4b5563; /* Dark gray for text in headers */
+    background-color: #f1f5f9;
+    color: #4b5563;
     font-weight: bold;
 }
 
 table tr:hover td {
-    background-color: #f9fafb; /* Light gray hover for rows */
+    background-color: #f9fafb;
 }
 
-/* Forms */
-input,
-textarea,
-select {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
+form {
+    display: flex;
+    flex-wrap: wrap;              /* allows multiple rows */
+    align-items: center;
+    gap: 0.5rem 1.5rem;           /* small spacing between items */
+    margin-bottom: 1.5rem;
+}
+
+/* FORM LABELS */
+form label {
+    font-weight: 600;
+    margin-right: 0.3rem;         /* tight spacing between label and field */
+    white-space: nowrap;          /* prevents label wrapping */
+}
+
+/* FORM INPUTS (override 100% width from your original CSS) */
+form input,
+form select,
+form textarea {
+    width: auto !important;       /* overrides earlier width: 100% */
+    min-width: 140px;             /* makes them compact */
+    padding: 0.5rem 0.75rem;
+    margin: 0;                    /* remove bottom margin */
     border-radius: 0.375rem;
-    border: 1px solid #d1d5db; /* Light gray border */
+    border: 1px solid #d1d5db;
     background-color: white;
     color: #4b5563;
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-    border-color: #3b82f6; /* Light blue focus */
+form input:focus,
+form textarea:focus,
+form select:focus {
+    border-color: #3b82f6;
     outline: none;
 }
 
-/* Button Styles */
+/* Submit button */
+form input[type="submit"],
 button {
     padding: 0.75rem 1.25rem;
     border-radius: 0.375rem;
-    background-color: #3b82f6; /* Light blue background */
+    background-color: #3b82f6;
     color: white;
     font-size: 1rem;
     font-weight: 600;
@@ -99,8 +116,9 @@ button {
     transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #2563eb; /* Slightly darker blue on hover */
+form input[type="submit"]:hover,
+button[type="submit"]:hover {
+    background-color: #2563eb;
 }
 
 button:disabled {
@@ -109,25 +127,24 @@ button:disabled {
     color: #9ca3af;
 }
 
-/* Navigation */
 nav {
     color: white;
     padding: 1rem 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 nav ul {
     list-style-type: none;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start; /* or space-evenly if you prefer */
 }
 
 nav ul li {
-    margin-right: 1.5rem;
+    margin-right: 2rem; /* increased spacing */
 }
 
 nav ul li:last-child {
-    margin-right: 0;
+    margin-right: 0; /* keep last item tight */
 }
 
 nav ul li a {
@@ -138,12 +155,13 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: #3b82f6; /* Light blue color on hover */
+    color: #3b82f6;
 }
+
 
 /* Additional Utility Classes */
 .rounded { border-radius: 0.375rem; }
-.bg-light { background-color: #f1f5f9; } /* Light background color */
-.bg-primary { background-color: #3b82f6; } /* Primary blue background */
-.text-dark { color: #2d3e50; } /* Dark gray text */
-.text-muted { color: #6b7280; } /* Muted text color */
+.bg-light { background-color: #f1f5f9; }
+.bg-primary { background-color: #3b82f6; }
+.text-dark { color: #2d3e50; }
+.text-muted { color: #6b7280; }
