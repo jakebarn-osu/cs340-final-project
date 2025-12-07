@@ -1,8 +1,16 @@
--- Citation for the following function:
--- Date: 11/19/2025
--- Copied from /OR/ Adapted from /OR/ Based on:
--- All PL code was adapted from coding examples in the exploration modules 
+  -- Citation for the following function:
+  -- Date: 11/19/2025
+  -- Copied from /OR/ Adapted from /OR/ Based on:
+  -- All PL code was adapted from coding examples in the exploration modules 
 
+
+# Citation for the following function:
+# Date: 11/23/2025
+# sp_update_inventory_item code provided and altered from Microsoft Copilot
+# Copilot was provided the DML code for updating quantity of InventoryItems and updating InventoryItems.equipment_id. 
+# Copilot was then prompted to provide the PLSQL for the SQL code. It was also instructed that p_quantity or p_new_equip_id
+# could be NULL values.
+#AI Source URL: https://copilot.microsoft.com/ 
 
 -- --------------------------------------
 -- sp_delete_reservation
@@ -108,12 +116,6 @@ DELIMITER ;
 -- --------------------------------------
 -- sp_update_inventory_item
 -- --------------------------------------
-# Citation for the following function:
-# Date: 11/23/2025
-# sp_update_inventory_item code provided and altered from Microsoft Copilot
-# Copilot was provided the DML code for updating quantity of InventoryItems and updating InventoryItems.equipment_id. 
-# Copilot was then prompted to provide the PLSQL for the SQL code. It was also instructed that p_quantity or p_new_equip_id
-# could be NULL values.
 DELIMITER //
 DROP PROCEDURE IF EXISTS sp_update_inventory_item;
 CREATE PROCEDURE sp_update_inventory_item (
