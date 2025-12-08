@@ -41,9 +41,9 @@
             </td>
             <td>
                 <form id="delete_reservation_form" method="POST" action="/reservations-delete">
-					<input type="hidden" name="delete_reservation_id" value="{{ reservation['reservation_id'] }}">
-					<button type="submit">Delete</button>
-				</form>
+                    <input type="hidden" name="delete_reservation_id" value="{{ reservation['reservation_id'] }}">
+                    <button type="submit">Delete</button>
+                </form>
             </td>
         </tr>
         {% endfor %}
@@ -57,14 +57,14 @@
     <label for="customer_id">Customer:</label>
     <select id="customer_id" name="customer_id">
         {% for customer in customers %}
-            <option value="{{ customer['id'] }}">{{ customer["first_name"]}} {{ customer["last_name"]}}</option>
+        <option value="{{ customer['id'] }}">{{ customer["first_name"]}} {{ customer["last_name"]}}</option>
         {% endfor %}
     </select>
-    
+
     <label for="equipment_id">Item:</label>
     <select id="equipment_id" name="equipment_id">
         {% for eq in equipment %}
-            <option value="{{ eq['id'] }}">{{ eq['name'] }}</option>
+        <option value="{{ eq['id'] }}">{{ eq['name'] }}</option>
         {% endfor %}
     </select>
 
@@ -85,14 +85,14 @@
 
     <select id="edit_customer_id" name="edit_customer_id">
         {% for customer in customers %}
-            <option value="{{ customer['id'] }}">{{ customer["first_name"]}} {{ customer["last_name"]}}</option>
+        <option value="{{ customer['id'] }}">{{ customer["first_name"]}} {{ customer["last_name"]}}</option>
         {% endfor %}
     </select>
 
     <label for="edit_equipment_id">Item:</label>
     <select id="edit_equipment_id" name="edit_equipment_id">
         {% for eq in equipment %}
-            <option value="{{ eq['id'] }}">{{ eq['name'] }}</option>
+        <option value="{{ eq['id'] }}">{{ eq['name'] }}</option>
         {% endfor %}
     </select>
 
@@ -118,10 +118,18 @@
         document.getElementById('edit_reservation_id').value = reservation.reservation_id;
         document.getElementById('edit_customer_id').value = reservation.customer_id;
         document.getElementById('edit_equipment_id').value = reservation.equipment_id;
-        document.getElementById('edit_start_date').value = reservation.start_date;
-        document.getElementById('edit_end_date').value = reservation.end_date
-        document.getElementById('edit_actual_start_date').value = reservation.actual_start_date;
-        document.getElementById('edit_actual_end_date').value = reservation.actual_end_date;
+
+        const start_date = new Date(reservation.start_date);
+        document.getElementById('edit_start_date').value = start_date?.toISOString().split("T")[0];
+
+        const end_date = new Date(reservation.end_date);
+        document.getElementById('edit_end_date').value = end_date?.toISOString().split("T")[0];
+
+        const act_start_date = reservation.actual_start_date ? new Date(reservation.actual_start_date) : new Date();
+        document.getElementById('edit_actual_start_date').value = act_start_date?.toISOString().split("T")[0];
+
+        const act_end_date = reservation.actual_end_date ? new Date(reservation.actual_end_date) : new Date();
+        document.getElementById('edit_actual_end_date').value = act_end_date?.toISOString().split("T")[0];
     }
 </script>
 
